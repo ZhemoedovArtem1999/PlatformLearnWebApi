@@ -1,9 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Authentication.Infrastructure.Interfaces;
+using Authentication.Infrastructure.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Authentication.DependencyInjection
 {
@@ -11,7 +9,8 @@ namespace Authentication.DependencyInjection
     {
         public static IServiceCollection DependencyInjectionAuthentication(this IServiceCollection services)
         {
-
+            services.AddScoped<ITokenManager, JwtTokenManager>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
         }

@@ -1,5 +1,8 @@
 
+using Authentication;
 using Authentication.DependencyInjection;
+using DataAccessLayer.Dependency;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 
@@ -24,12 +27,11 @@ namespace PlatformLearn
 
             // Add services to the container.
             var assemblyAuthorizationPath = Path.Combine(AppContext.BaseDirectory, "Authentication.dll");
-
-
             var assemblyAuthorizaion = Assembly.LoadFrom(assemblyAuthorizationPath);
 
             builder.Services.AddControllers().AddApplicationPart(assemblyAuthorizaion);
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+           
+            
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -44,6 +46,7 @@ namespace PlatformLearn
                 options.IdleTimeout = TimeSpan.FromSeconds(60);
             });
 
+            builder.Services.DependencyInjectionDataAccessLayer(builder.Configuration);
             builder.Services.DependencyInjectionAuthentication();
 
             var app = builder.Build();

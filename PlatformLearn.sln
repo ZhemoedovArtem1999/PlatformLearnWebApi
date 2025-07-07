@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformLearn", "PlatformLe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication", "Authorizaion\Authentication.csproj", "{6C3F3F7A-11DA-4340-9E6C-FB132986327D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{603AC225-80F1-4AE1-8FFE-69B3D7F3F179}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6C3F3F7A-11DA-4340-9E6C-FB132986327D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C3F3F7A-11DA-4340-9E6C-FB132986327D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C3F3F7A-11DA-4340-9E6C-FB132986327D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{603AC225-80F1-4AE1-8FFE-69B3D7F3F179}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{603AC225-80F1-4AE1-8FFE-69B3D7F3F179}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{603AC225-80F1-4AE1-8FFE-69B3D7F3F179}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{603AC225-80F1-4AE1-8FFE-69B3D7F3F179}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
