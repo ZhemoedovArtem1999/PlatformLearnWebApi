@@ -49,32 +49,14 @@ namespace PlatformLearn
             builder.Services.DependencyInjectionDataAccessLayer(builder.Configuration);
             builder.Services.DependencyInjectionAuthentication();
 
-            builder.Services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
-
-                // Для библиотек
-                var xmlFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.xml");
-                foreach (var xmlFile in xmlFiles)
-                {
-                    c.IncludeXmlComments(xmlFile);
-                }
-
-                c.EnableAnnotations();
-                c.IgnoreObsoleteProperties();
-            });
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI();
-            //}
-
-            app.UseWebApiSwagger("PlatformLearn", "v1");
-
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
 
             app.UseRouting();

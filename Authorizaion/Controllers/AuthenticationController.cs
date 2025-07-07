@@ -7,15 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace Authentication.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Area("api")]
+    [Route("[area]/[controller]")]
     public class AuthenticationController(IAuthenticationService authenticationService) : ControllerBase
     {
-        [HttpGet("proba/{aaa}")]
-        public ActionResult<string> Proba(long aaa)
-        {
-            
-            return $"aaaa{aaa}";
-        }
 
         [HttpPost("Authentcation")]
         public async Task<Results<Ok<AuthentcationResponseDto>, BadRequest<ValidationProblemDetails>>> Login(AuthentcationDto authentcation, CancellationToken cancellationToken)

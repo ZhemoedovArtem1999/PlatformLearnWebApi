@@ -12,10 +12,6 @@ namespace Authentication.DependencyInjection
             services.AddScoped<ITokenManager, JwtTokenManager>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
 
-
-            services.AddWebApi("authentification", "1.0.0", "apiAuthentification");
-
-
             return services;
         }
 
