@@ -1,10 +1,6 @@
 
-using Authentication;
-using Authentication.DependencyInjection;
 using DataAccessLayer.Dependency;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
-
+using GrpcContracts;
 
 namespace PlatformLearn
 {
@@ -20,16 +16,16 @@ namespace PlatformLearn
                 {
                     builder.AllowAnyOrigin()
                            .AllowAnyMethod()
-                           .AllowAnyHeader();
+                           .AllowAnyHeader()
+                           .WithExposedHeaders("Grpc-Status", "Grpc-Message"); ;
                 });
             });
 
 
-            // Add services to the container.
-            var assemblyAuthorizationPath = Path.Combine(AppContext.BaseDirectory, "Authentication.dll");
-            var assemblyAuthorizaion = Assembly.LoadFrom(assemblyAuthorizationPath);
+            //var assemblyAuthorizationPath = Path.Combine(AppContext.BaseDirectory, "Authentication.dll");
+            //var assemblyAuthorizaion = Assembly.LoadFrom(assemblyAuthorizationPath);
 
-            builder.Services.AddControllers().AddApplicationPart(assemblyAuthorizaion);
+            //builder.Services.AddControllers().AddApplicationPart(assemblyAuthorizaion);
            
             
             builder.Services.AddEndpointsApiExplorer();
@@ -47,7 +43,11 @@ namespace PlatformLearn
             });
 
             builder.Services.DependencyInjectionDataAccessLayer(builder.Configuration);
-            builder.Services.DependencyInjectionAuthentication();
+
+            builder.Services.AddGrpcClient<AuthService.AuthServiceClient>(options =>
+            {
+                options.Address = new Uri("http://localhost:5777");
+            });
 
             var app = builder.Build();
 
@@ -60,6 +60,8 @@ namespace PlatformLearn
 
 
             app.UseRouting();
+
+
             app.UseCors("AllowAllOrigins");
 
             app.UseHttpsRedirection();
