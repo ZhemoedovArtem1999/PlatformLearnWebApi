@@ -15,6 +15,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcContract", "GrpcContrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService", "AuthService\AuthService.csproj", "{758AB25E-E4FF-4D6A-A749-5FCAE802CB55}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServicesGRPC", "ServicesGRPC", "{4E054A83-DC9D-422B-8616-A9D1BFA1DC6D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{69CA6140-8EC0-48C7-B1DE-FA16823F5C38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{AC896968-2A4E-46A7-B408-BB3B73F3F732}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,12 +47,18 @@ Global
 		{758AB25E-E4FF-4D6A-A749-5FCAE802CB55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{758AB25E-E4FF-4D6A-A749-5FCAE802CB55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{758AB25E-E4FF-4D6A-A749-5FCAE802CB55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC896968-2A4E-46A7-B408-BB3B73F3F732}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC896968-2A4E-46A7-B408-BB3B73F3F732}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC896968-2A4E-46A7-B408-BB3B73F3F732}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC896968-2A4E-46A7-B408-BB3B73F3F732}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{540709DE-8438-424F-A2C2-E75C48E28E9B} = {88F8830A-4764-4675-8005-C87C2313D2CA}
+		{758AB25E-E4FF-4D6A-A749-5FCAE802CB55} = {4E054A83-DC9D-422B-8616-A9D1BFA1DC6D}
+		{AC896968-2A4E-46A7-B408-BB3B73F3F732} = {69CA6140-8EC0-48C7-B1DE-FA16823F5C38}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7222AE2-CEBB-4892-8AEC-4E974147A18F}
