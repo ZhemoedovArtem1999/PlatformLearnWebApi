@@ -1,14 +1,13 @@
-﻿using GrpcContracts;
+﻿using Core.Controllers;
+using GrpcContracts;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PlatformLearn.Models.Auth;
 
 namespace PlatformLearn.Controllers
 {
-    [ApiController]
-    [Area("api")]
-    [Route("[area]/[controller]")]
-    public class AuthController(AuthService.AuthServiceClient authClient) : ControllerBase
+   
+    public class AuthController(AuthService.AuthServiceClient authClient) : WebApiControllerBase
     {
         [HttpPost("auth")]
         public async Task<Results<Ok<AuthentcationResponseDto>, BadRequest<ValidationProblemDetails>>> Login(AuthentcationDto authentication, CancellationToken cancellationToken = default)
