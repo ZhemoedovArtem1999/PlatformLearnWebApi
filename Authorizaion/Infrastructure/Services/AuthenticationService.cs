@@ -14,7 +14,7 @@ namespace Authentication.Infrastructure.Services
             {
                 var response = new AuthentcationResponseDto();
 
-                var user = context.Users.Where(x => x.Login == authentcation.Login).FirstOrDefault();
+                var user = context.Users.Where(x => x.Email == authentcation.Email).FirstOrDefault();
 
                 if (user == null) throw new Exception("Неверный логин или пароль");
 

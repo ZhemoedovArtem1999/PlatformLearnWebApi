@@ -1,4 +1,7 @@
-﻿namespace DataAccessLayer.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace DataAccessLayer.Models;
 
 public partial class Role
 {
@@ -6,5 +9,5 @@ public partial class Role
 
     public string? Name { get; set; }
 
-    public virtual User? User { get; set; }
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }
