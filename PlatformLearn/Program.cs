@@ -2,7 +2,7 @@
 using DataAccessLayer.Dependency;
 using GrpcContracts;
 
-namespace PlatformLearn
+namespace PlatformLearnWebApi
 {
     public class Program
     {
@@ -46,7 +46,7 @@ namespace PlatformLearn
 
             builder.Services.AddGrpcClient<AuthService.AuthServiceClient>(options =>
             {
-                options.Address = new Uri("http://localhost:5777");
+                options.Address = new Uri("http://localhost:5777"); // TODO: заменить из конфигурации
             });
 
             var app = builder.Build();

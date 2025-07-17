@@ -30,16 +30,13 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("user_pkey");
+            entity.HasKey(e => e.Id).HasName("user_pkey");
 
             entity.ToTable("user", "user");
 
-            entity.Property(e => e.RoleId).ValueGeneratedNever();
-            entity.Property(e => e.BirthDate).HasColumnType("timestamp without time zone");
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-            entity.HasOne(d => d.Role).WithOne(p => p.User)
-                .HasForeignKey<User>(d => d.RoleId)
+            entity.HasOne(d => d.Role).WithMany(p => p.Users)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("user_RoleId_fkey");
         });
 
