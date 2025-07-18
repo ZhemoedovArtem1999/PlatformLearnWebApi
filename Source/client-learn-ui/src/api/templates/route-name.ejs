@@ -1,0 +1,48 @@
+<%
+const { routeInfo, utils } = it;
+const {
+  operationId,
+  method,
+  route,
+  moduleName,
+  responsesTypes,
+  description,
+  tags,
+  summary,
+  pathArgs,
+} = routeInfo;
+const { _, fmtToJSDocLine, require } = utils;
+
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+const formatName = (pathName, method) => pathName ? _.camelCase(pathName.startsWith(method) || pathName.endsWith(method) ? pathName : `${method}_${pathName}`) : method;
+
+const methodAliases = {
+  get: (pathName, hasPathInserts) => formatName(pathName, "get"),
+  post: (pathName, hasPathInserts) => formatName(pathName, "") || "Post",
+  put: (pathName, hasPathInserts) => formatName(pathName, "update"),
+  patch: (pathName, hasPathInserts) => formatName(pathName, "patch"),
+  delete: (pathName, hasPathInserts) => formatName(pathName, "delete"),
+};
+
+const createCustomOperationId = (method, route, moduleName) => {
+  const hasPathInserts = /\{(\w){1,}\}/g.test(route);
+  let splittedRouteBySlash = _.compact((hasPathInserts ? _.replace(route, /\{(\w){1,}\}/g, "") : route).split("/"));
+  if (splittedRouteBySlash.length > 1) {
+    splittedRouteBySlash = splittedRouteBySlash.splice(1);
+    while(splittedRouteBySlash.length > 0 && _.lowerCase(splittedRouteBySlash[0]) == _.lowerCase(moduleName))
+      splittedRouteBySlash = splittedRouteBySlash.splice(1)
+  }
+
+  return capitalizeFirstLetter(methodAliases[method](splittedRouteBySlash.join("_"), hasPathInserts));
+};
+
+if (operationId)
+  return _.camelCase(operationId);
+if (route === "/")
+  return _.camelCase(`${_.lowerCase(method)}Root`);
+
+  return createCustomOperationId(method, route, moduleName);
+%>

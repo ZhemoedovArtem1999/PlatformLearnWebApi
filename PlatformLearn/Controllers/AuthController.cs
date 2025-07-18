@@ -11,6 +11,8 @@ namespace PlatformLearnWebApi.Controllers
     public class AuthController(AuthService.AuthServiceClient authClient) : WebApiControllerBase
     {
         [HttpPost("auth")]
+        [ProducesResponseType(typeof(AuthentcationResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<Results<Ok<AuthentcationResponseDto>, BadRequest<ValidationProblemDetails>>> Login(AuthentcationDto authenticationDto, CancellationToken cancellationToken = default)
         {
             try
@@ -43,6 +45,8 @@ namespace PlatformLearnWebApi.Controllers
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(typeof(RegisterResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<Results<Ok<RegisterResponse>, BadRequest<ValidationProblemDetails>>> Register(RegisterRequestDto register, CancellationToken cancellationToken = default) // TODO: тут проба использования в возврате модели из контракта grpc
         {
             try

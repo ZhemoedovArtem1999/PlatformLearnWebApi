@@ -1,0 +1,111 @@
+<% 
+const apiName = "PlatformLearn";
+%>
+
+import React, { createContext, ReactNode, useContext, useEffect, useMemo, useReducer, useState } from "react";
+import * as ApiTypes from "./api/data-contracts";
+import { ApiConfig, HttpClient } from "./api/http-client";
+
+type UserCredentials = Record<string, string>;
+
+interface LoginErrorCallback { (error: unknown): void; }
+
+function Set<%= apiName %>CredentialsReducer(oldCredentials: UserCredentials | undefined, newCredentials?: UserCredentials | null): UserCredentials | undefined {
+  if (newCredentials) return newCredentials;
+  
+  if (oldCredentials) return undefined;
+  
+  return oldCredentials;
+}
+
+function Add<%= apiName %>LoginErrorCallbackReducer(callbacks: LoginErrorCallback[], newCallback?: LoginErrorCallback): LoginErrorCallback[] {
+  if (newCallback) {
+    if (!callbacks.find((c) => c == newCallback)) {
+      return [...callbacks, newCallback];
+    }
+  }
+
+  return callbacks;
+}
+
+const <%= apiName %>AddLoginErrorCallbackContext = createContext<React.Dispatch<LoginErrorCallback>>(() => undefined);
+const <%= apiName %>ApiConfigContext = createContext<ApiConfig<ApiTypes.AuthentcationResponseDto> | undefined>(undefined);
+const <%= apiName %>AuthorizationContext = createContext<[ApiTypes.AuthentcationResponseDto | undefined, React.Dispatch<UserCredentials | undefined | null>]>([undefined, () => void 0]);
+
+const use<%= apiName %>Authorization = () => useContext(<%= apiName %>AuthorizationContext);
+const use<%= apiName %>ApiConfig = () => useContext(<%= apiName %>ApiConfigContext);
+const use<%= apiName %>AddLoginErrorCallback = () => useContext(<%= apiName %>AddLoginErrorCallbackContext);
+
+//TODO: переделать с хука на обычную функцию. Подумать над использованием useMemo (учесть что при отмене операции будут отменятся все запросы к данному апи).
+function use<%= apiName %>Api<ApiType extends HttpClient<unknown>>(apiType: new (apiConfig: ApiConfig<unknown>) => ApiType, apiConfig: ApiConfig<ApiTypes.AuthentcationResponseDto> = {}): ApiType | undefined {
+  const [authorization] = use<%= apiName %>Authorization();
+  const baseConfig = use<%= apiName %>ApiConfig();
+
+  const api = new apiType({
+    ...baseConfig,
+    ...apiConfig,
+  } as ApiConfig<unknown>);
+
+  if (authorization) api.setSecurityData(authorization);
+  return api;
+}
+
+const <%= apiName %>Api = ({
+  apiAddress,
+  credentials,
+  onLoginError,
+  token,
+  children,
+}: {
+  apiAddress: string;
+  credentials?: UserCredentials;
+  onLoginError?: LoginErrorCallback;
+  token?: string;
+  children: ReactNode;
+}) => {
+  const [authorizationData, setAuthorizationData] = useState<ApiTypes.AuthentcationResponseDto | undefined>(token ? {token: token} : undefined);
+  const [apiCredentials, setApiCredentials] = useReducer(Set<%= apiName %>CredentialsReducer, credentials);
+  const [callbacks, addLoginErrorCallback] = useReducer(
+    Add<%= apiName %>LoginErrorCallbackReducer,
+    onLoginError ? [onLoginError] : [],
+  );
+  
+  const apiConfig = useMemo(() => {
+    return {
+      baseUrl: apiAddress,
+      baseApiParams: {
+        secure: true,
+      },
+      securityWorker: (authorizationData: ApiTypes.AuthentcationResponseDto | null) => {
+        if (authorizationData) {
+          return { headers: { authorization: `Bearer ${authorizationData.token}` } };
+        }
+      },
+    };
+  }, [apiAddress]);
+  
+  return (
+    <<%= apiName %>ApiConfigContext.Provider value={apiConfig}>
+      <<%= apiName %>AddLoginErrorCallbackContext.Provider value={addLoginErrorCallback}>
+        <<%= apiName %>AuthorizationContext.Provider value={[authorizationData, setApiCredentials]}>
+          {children}
+        </<%= apiName %>AuthorizationContext.Provider>
+      </<%= apiName %>AddLoginErrorCallbackContext.Provider>
+    </<%= apiName %>ApiConfigContext.Provider>
+  );
+};
+
+export { <%= apiName %>Api, ApiTypes as <%= apiName %>ApiTypes, use<%= apiName %>AddLoginErrorCallback, use<%= apiName %>Api, use<%= apiName %>Authorization };
+export type { LoginErrorCallback, UserCredentials };
+
+<% 
+const { utils, routes } = it;
+const { _, pascalCase } = utils;
+
+routes.combined.forEach((route) => { 
+    const apiClassName = pascalCase(_.endsWith(_.lowerCase(route.moduleName), "api") ? route.moduleName : `${route.moduleName}_api`);
+%>
+  export { <%= apiClassName %> } from "./api/<%= apiClassName %>";
+<% 
+  })
+%>

@@ -1,6 +1,10 @@
-
+﻿
 using DataAccessLayer.Dependency;
 using GrpcContracts;
+using Microsoft.OpenApi.Models;
+using PlatformLearnWebApi.Filters;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 
 namespace PlatformLearnWebApi
 {
@@ -21,19 +25,82 @@ namespace PlatformLearnWebApi
                 });
             });
 
+            builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)
+                            .AddJwtBearer(options =>
+                            {
+                                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                                {
+                                    ValidateIssuer = true,
+                                    ValidateAudience = true,
+                                    ValidateLifetime = true,
+                                    ValidateIssuerSigningKey = true,
+                                    ValidIssuer = builder.Configuration["Authentication:Issuer"],
+                                    ValidAudience = builder.Configuration["Authentication:Audience"],
+                                    IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+                                        System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Authentication:SecurityKey"]))
+                                };
+                            });
+
+
 
             //var assemblyAuthorizationPath = Path.Combine(AppContext.BaseDirectory, "Authentication.dll");
             //var assemblyAuthorizaion = Assembly.LoadFrom(assemblyAuthorizationPath);
 
             //builder.Services.AddControllers().AddApplicationPart(assemblyAuthorizaion);
-           
-            
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
 
+
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "PlatformLearnWebApi", Version = "v1" });
+
+                // Включите XML комментарии (если нужно)
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                if (File.Exists(xmlPath))
+                {
+                    c.IncludeXmlComments(xmlPath);
+                }
+
+                // Используйте имена методов как operationId
+                c.CustomOperationIds(apiDesc =>
+                {
+                    return apiDesc.TryGetMethodInfo(out MethodInfo methodInfo)
+                        ? methodInfo.Name
+                        : null;
+                });
+
+                c.OperationFilter<AuthorizeCheckOperationFilter>();  // ← Добавьте эту строку
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                });
+
+                // Глобальное требование авторизации
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+
+
+    });
+
+
+
+
+            });
             builder.Services.AddControllers();
 
-            // ���������� ��������������� �����
+            // Добавление вспомогательных служб
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
@@ -46,7 +113,7 @@ namespace PlatformLearnWebApi
 
             builder.Services.AddGrpcClient<AuthService.AuthServiceClient>(options =>
             {
-                options.Address = new Uri("http://localhost:5777"); // TODO: �������� �� ������������
+                options.Address = new Uri("http://localhost:5777"); // TODO: заменить из конфигурации
             });
 
             var app = builder.Build();
