@@ -55,16 +55,21 @@ namespace AuthService.Services
         private (bool, string) IsValid(LoginRequest request)
         {
             string message = "Неверный логин или пароль";
+            try
+            {
 
             var user = _dbContext.Users.Where(x => x.Email == request.Login).FirstOrDefault();
             if (user == null) throw new Exception("Неверный логин или пароль");
-
-            // TODO:  тут добавить обработку пароля в хэш с солью
 
             if (user.Password == GetHashPassword(request.Password, user.Salt))
             {
                 message = "Аутентификация пройдена";
                 return (true, message);
+            }
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
             }
 
             return (false, message);

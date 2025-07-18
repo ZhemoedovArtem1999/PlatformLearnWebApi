@@ -1,0 +1,1 @@
+export const basePlatformLearnUrl = "http://localhost:5206"
