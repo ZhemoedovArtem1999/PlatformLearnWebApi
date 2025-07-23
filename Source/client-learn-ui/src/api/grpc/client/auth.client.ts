@@ -2,7 +2,7 @@
 import { AuthServiceClient } from '../api/auth/auth_grpc_web_pb.js';
 import * as grpcWeb from 'grpc-web';
 import * as api from '../api/auth/auth_pb.js';
-const GRPC_HOST = process.env.REACT_APP_GATEWAY_HOST + '/auth' // || 'http://localhost:5206/auth';
+const GATEWAY_HOST = process.env.REACT_APP_GATEWAY_HOST + '/auth';
 
 export interface ILoginRequest {
   login: string;
@@ -79,7 +79,7 @@ export class AuthServiceService {
   };
 
   constructor() {
-    this.client = new AuthServiceClient(GRPC_HOST, null, {
+    this.client = new AuthServiceClient(GATEWAY_HOST, null, {
       format: 'binary',
       withCredentials: false,
       debug: process.env.NODE_ENV === 'development'

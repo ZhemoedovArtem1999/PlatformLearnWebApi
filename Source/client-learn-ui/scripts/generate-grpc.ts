@@ -32,7 +32,7 @@ import * as api from '../api/${path.basename(
   fileName,
   "_grpc_web_pb.js"
 )}/${protoImportPath.replace("_pb.d", "_pb")}';
-const GRPC_HOST = process.env.REACT_APP_GATEWAY_HOST + '/${api}' // || 'http://localhost:5206/${api}';
+const GATEWAY_HOST = process.env.REACT_APP_GATEWAY_HOST + '/${api}';
 
 ${messageInterfaces}
 
@@ -69,7 +69,7 @@ export class ${serviceName.replace(/Client$/, "")}Service {
     .join("")}
 
   constructor() {
-    this.client = new ${serviceName}(GRPC_HOST, null, {
+    this.client = new ${serviceName}(GATEWAY_HOST, null, {
       format: 'binary',
       withCredentials: false,
       debug: process.env.NODE_ENV === 'development'
