@@ -20,9 +20,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src/**/*", "scripts/generate-grpc.ts", "scripts/generate-proto.ts"]
+
 }
