@@ -3,6 +3,7 @@ using AuthService.Models;
 using DataAccessLayer.Models;
 using Grpc.Core;
 using GrpcContracts;
+using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,6 +15,15 @@ namespace AuthService.Services
     {
         private readonly int Iterations = 99999;
         private readonly int HashSize = 32;
+
+        [Authorize]
+        public override Task<TokenValidResponse> TokenValid(TokenValidRequest reguest, ServerCallContext context)
+        {
+            return Task.FromResult(new TokenValidResponse
+            {
+                Success = true
+            });
+        }
 
         public override Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
         {
@@ -103,8 +113,6 @@ namespace AuthService.Services
             {
                 return Task.FromResult(new RegisterResponse { Message = ex.Message, Success = false });
             }
-
-
         }
 
         private string GetHashPassword(string password, string salt)
@@ -119,7 +127,7 @@ namespace AuthService.Services
             using (var pbkdf2 = new Rfc2898DeriveBytes(
                       password: password,
                       salt: saltBytes,
-                      iterations: 1,
+                      iterations: Iterations,
                       hashAlgorithm: HashAlgorithmName.SHA256))
             {
                 return pbkdf2.GetBytes(HashSize);

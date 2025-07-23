@@ -4,6 +4,14 @@ import * as grpcWeb from 'grpc-web';
 import * as api from '../api/auth/auth_pb.js';
 const GATEWAY_HOST = process.env.REACT_APP_GATEWAY_HOST + '/auth';
 
+export interface ITokenValidRequest {
+
+}
+
+export interface ITokenValidResponse {
+  success: boolean;
+}
+
 export interface ILoginRequest {
   login: string;
   password: string;
@@ -45,10 +53,10 @@ export class AuthServiceService {
       }
         catch(error){
         if (error instanceof grpcWeb.RpcError){
-          throw new Error('Failed:' + error.message);
+          throw error;
         }
           else{
-            throw new Error('Unknown error');
+            throw error;
             }
         }
     
@@ -65,10 +73,10 @@ export class AuthServiceService {
       }
         catch(error){
         if (error instanceof grpcWeb.RpcError){
-          throw new Error('Failed:' + error.message);
+          throw error;
         }
           else{
-            throw new Error('Unknown error');
+            throw error;
             }
         }
     
@@ -76,6 +84,26 @@ export class AuthServiceService {
 
   private RegisterInternal = (request: api.RegisterRequest): Promise<api.RegisterResponse> => {
     return this.callMethod('register', request);
+  };
+      
+       public TokenValid = async (request: api.TokenValidRequest): Promise<ITokenValidResponse> => {
+       try { 
+        const response = await this.TokenValidInternal(request);
+        return response as unknown as ITokenValidResponse;
+      }
+        catch(error){
+        if (error instanceof grpcWeb.RpcError){
+          throw error;
+        }
+          else{
+            throw error;
+            }
+        }
+    
+  };
+
+  private TokenValidInternal = (request: api.TokenValidRequest): Promise<api.TokenValidResponse> => {
+    return this.callMethod('tokenValid', request);
   };
 
   constructor() {

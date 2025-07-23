@@ -51,10 +51,10 @@ export class ${serviceName.replace(/Client$/, "")}Service {
       }
         catch(error){
         if (error instanceof grpcWeb.RpcError){
-          throw new Error('Failed:' + error.message);
+          throw error;
         }
           else{
-            throw new Error('Unknown error');
+            throw error;
             }
         }
     

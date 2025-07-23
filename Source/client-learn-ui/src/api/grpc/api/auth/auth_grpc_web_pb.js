@@ -197,5 +197,66 @@ proto.AuthServicePromiseClient.prototype.register =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.TokenValidRequest,
+ *   !proto.TokenValidResponse>}
+ */
+const methodDescriptor_AuthService_TokenValid = new grpc.web.MethodDescriptor(
+  '/AuthService/TokenValid',
+  grpc.web.MethodType.UNARY,
+  proto.TokenValidRequest,
+  proto.TokenValidResponse,
+  /**
+   * @param {!proto.TokenValidRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.TokenValidResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.TokenValidRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.TokenValidResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.TokenValidResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.AuthServiceClient.prototype.tokenValid =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/AuthService/TokenValid',
+      request,
+      metadata || {},
+      methodDescriptor_AuthService_TokenValid,
+      callback);
+};
+
+
+/**
+ * @param {!proto.TokenValidRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.TokenValidResponse>}
+ *     Promise that resolves to the response
+ */
+proto.AuthServicePromiseClient.prototype.tokenValid =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/AuthService/TokenValid',
+      request,
+      metadata || {},
+      methodDescriptor_AuthService_TokenValid);
+};
+
+
 module.exports = proto;
 

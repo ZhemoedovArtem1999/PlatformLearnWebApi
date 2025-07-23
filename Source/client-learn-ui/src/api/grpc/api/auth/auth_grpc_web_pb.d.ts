@@ -22,6 +22,13 @@ export class AuthServiceClient {
                response: auth_pb.RegisterResponse) => void
   ): grpcWeb.ClientReadableStream<auth_pb.RegisterResponse>;
 
+  tokenValid(
+    request: auth_pb.TokenValidRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.RpcError,
+               response: auth_pb.TokenValidResponse) => void
+  ): grpcWeb.ClientReadableStream<auth_pb.TokenValidResponse>;
+
 }
 
 export class AuthServicePromiseClient {
@@ -38,6 +45,11 @@ export class AuthServicePromiseClient {
     request: auth_pb.RegisterRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<auth_pb.RegisterResponse>;
+
+  tokenValid(
+    request: auth_pb.TokenValidRequest,
+    metadata?: grpcWeb.Metadata
+  ): Promise<auth_pb.TokenValidResponse>;
 
 }
 

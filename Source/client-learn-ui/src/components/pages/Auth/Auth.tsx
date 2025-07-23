@@ -7,10 +7,8 @@ import { TestAuthApi, usePlatformLearnApi } from "../../../api";
 import authStore from "../../../stores/auth-store";
 import {
   LoginRequest,
-  LoginResponse,
 } from "../../../api/grpc/api//auth/auth_pb";
 import { AuthServiceClientApi } from "../../../api/grpc/client/auth.client";
-import * as api from "../../../api/grpc/api/auth/auth_pb";
 
 export const Auth: React.FC = () => {
   const testApi = usePlatformLearnApi(TestAuthApi);

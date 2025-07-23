@@ -3,6 +3,38 @@ import * as jspb from 'google-protobuf'
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb'; // proto import: "google/protobuf/timestamp.proto"
 
 
+export class TokenValidRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): TokenValidRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: TokenValidRequest): TokenValidRequest.AsObject;
+  static serializeBinaryToWriter(message: TokenValidRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): TokenValidRequest;
+  static deserializeBinaryFromReader(message: TokenValidRequest, reader: jspb.BinaryReader): TokenValidRequest;
+}
+
+export namespace TokenValidRequest {
+  export type AsObject = {
+  }
+}
+
+export class TokenValidResponse extends jspb.Message {
+  getSuccess(): boolean;
+  setSuccess(value: boolean): TokenValidResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): TokenValidResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: TokenValidResponse): TokenValidResponse.AsObject;
+  static serializeBinaryToWriter(message: TokenValidResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): TokenValidResponse;
+  static deserializeBinaryFromReader(message: TokenValidResponse, reader: jspb.BinaryReader): TokenValidResponse;
+}
+
+export namespace TokenValidResponse {
+  export type AsObject = {
+    success: boolean,
+  }
+}
+
 export class LoginRequest extends jspb.Message {
   getLogin(): string;
   setLogin(value: string): LoginRequest;

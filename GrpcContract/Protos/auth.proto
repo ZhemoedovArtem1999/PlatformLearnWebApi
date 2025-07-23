@@ -7,7 +7,15 @@ option csharp_namespace = "GrpcContracts";
 service AuthService {
   rpc Login (LoginRequest) returns (LoginResponse);
   rpc Register (RegisterRequest) returns (RegisterResponse);
+  rpc TokenValid (TokenValidRequest) returns (TokenValidResponse);
+}
 
+message TokenValidRequest {
+
+}
+
+message TokenValidResponse {
+	bool success = 1;
 }
 
 message LoginRequest {

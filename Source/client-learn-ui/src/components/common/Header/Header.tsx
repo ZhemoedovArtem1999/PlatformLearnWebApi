@@ -40,13 +40,13 @@ export const Header: React.FC<IHeaderProps> = (props: IHeaderProps) => {
       label: "Войти",
       url: "/auth",
       className: "menu-item",
-      visible: !localStorage.isAuth(),
+      visible: !authStore.isAuth(),
     },
     {
       label: "Выйти",
       command: logout,
       className: "menu-item",
-      visible: localStorage.isAuth(),
+      visible: authStore.isAuth(),
     },
   ];
   return (
