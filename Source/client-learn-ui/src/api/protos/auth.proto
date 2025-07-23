@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto"; 
+
+option csharp_namespace = "GrpcContracts";
+
+service AuthService {
+  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+
+}
+
+message LoginRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+  string username = 2;
+  bool success = 3;
+  string message = 4;
+}
+
+message RegisterRequest {
+	string email = 1;
+	string password = 2;
+	string password2 = 3;
+	string lastname = 4;
+	string firstname = 5;
+	string middlename = 6;
+	google.protobuf.Timestamp date_birth = 7;
+	string gender = 8;
+}
+
+message RegisterResponse{
+	bool success = 1;
+	string message = 2;
+}

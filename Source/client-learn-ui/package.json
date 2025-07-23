@@ -3,15 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@grpc/proto-loader": "^0.7.15",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.126",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "bootstrap": "^5.3.7",
+    "google-protobuf": "^3.21.4",
+    "grpc-web": "^1.5.0",
     "mobx": "^6.13.7",
     "mobx-react": "^9.2.0",
     "primeflex": "^4.0.0",
@@ -32,7 +34,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build-api": "npx tsx ./src/api/build-api.tsx"
+    "build-api": "npx tsx ./src/api/build-api.tsx",
+    "generateqrpc:proto": "npx tsx ./scripts/generate-grpc.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -53,6 +56,24 @@
     ]
   },
   "devDependencies": {
-    "swagger-typescript-api": "^13.0.23"
+    "@grpc/grpc-js": "^1.13.4",
+    "@improbable-eng/grpc-web": "^0.15.0",
+    "@types/node": "^24.0.15",
+    "browserify-zlib": "^0.2.0",
+    "grpc-tools": "^1.13.0",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "protobufjs": "^7.5.3",
+    "protoc-gen-grpc-web": "^1.5.0",
+    "protoc-gen-js": "^3.21.4-4",
+    "protoc-ts": "^0.0.5",
+    "stream-browserify": "^3.0.0",
+    "swagger-typescript-api": "^13.0.23",
+    "ts-node": "^10.9.2",
+    "ts-proto": "^2.7.5",
+    "ts-protoc-gen": "^0.15.0",
+    "tsx": "^4.20.3",
+    "util": "^0.12.5"
   }
 }
