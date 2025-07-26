@@ -59,7 +59,6 @@ namespace AuthService
             app.UseAuthorization();
             app.MapGrpcService<AuthServiceImpl>().EnableGrpcWeb()
                 .RequireCors("AllowAll");
-                //.RequireHost("*:5777"); // явное указание хоста
             app.Run();
         }
     }

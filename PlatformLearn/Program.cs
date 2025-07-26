@@ -111,9 +111,9 @@ namespace PlatformLearnWebApi
 
             builder.Services.DependencyInjectionDataAccessLayer(builder.Configuration);
 
-            builder.Services.AddGrpcClient<AuthService.AuthServiceClient>(options =>
+            builder.Services.AddGrpcClient<GrpcContracts.AuthService.AuthServiceClient>(options =>
             {
-                options.Address = new Uri("http://localhost:5777"); // TODO: заменить из конфигурации
+                options.Address = new Uri("http://localhost:5777"); // TODO: заменить из конфигурации или вообще вырезать
             });
 
             var app = builder.Build();

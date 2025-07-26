@@ -1,17 +1,19 @@
 ﻿using AuthService.Infrastructure.Interfaces;
 using AuthService.Models;
 using DataAccessLayer.Models;
+using DataAccessLayer.Repository.FilterModel;
+using DataAccessLayer.UnitOfWork;
 using Grpc.Core;
 using GrpcContracts;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace AuthService.Services
 {
-    public class AuthServiceImpl(AppDbContext _dbContext, ITokenManager tokenManager) : GrpcContracts.AuthService.AuthServiceBase
+    public class AuthServiceImpl(IUnitOfWork unitOfWork, ITokenManager tokenManager) : GrpcContracts.AuthService.AuthServiceBase
     {
         private readonly int Iterations = 99999;
         private readonly int HashSize = 32;
@@ -25,9 +27,9 @@ namespace AuthService.Services
             });
         }
 
-        public override Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
+        public override async Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
         {
-            (bool isValid, string message) = IsValid(request);
+            (bool isValid, string message) = await IsValid(request);
 
             if (isValid)
             {
@@ -43,7 +45,7 @@ namespace AuthService.Services
 
                 var token = tokenManager.GenerateToken(appUser);
 
-                return Task.FromResult(new LoginResponse
+                return await Task.FromResult(new LoginResponse
                 {
                     Success = true,
                     Token = token,
@@ -54,7 +56,7 @@ namespace AuthService.Services
             }
             else
             {
-                return Task.FromResult(new LoginResponse
+                return await Task.FromResult(new LoginResponse
                 {
                     Success = false,
                     Message = message
@@ -62,20 +64,22 @@ namespace AuthService.Services
             }
         }
 
-        private (bool, string) IsValid(LoginRequest request)
+        private async Task<(bool, string)> IsValid(LoginRequest request)
         {
             string message = "Неверный логин или пароль";
             try
             {
+                var users = await unitOfWork.GetFilterAsync<User, UserFilter>(new UserFilter { Email = request.Login });
+                var user = users.FirstOrDefault();
 
-            var user = _dbContext.Users.Where(x => x.Email == request.Login).FirstOrDefault();
-            if (user == null) throw new Exception("Неверный логин или пароль");
+                //var user = _dbContext.Users.Where(x => x.Email == request.Login).FirstOrDefault();
+                if (user == null) throw new Exception("Неверный логин или пароль");
 
-            if (user.Password == GetHashPassword(request.Password, user.Salt))
-            {
-                message = "Аутентификация пройдена";
-                return (true, message);
-            }
+                if (user.Password == GetHashPassword(request.Password, user.Salt))
+                {
+                    message = "Аутентификация пройдена";
+                    return (true, message);
+                }
             }
             catch (Exception ex)
             {
@@ -85,11 +89,13 @@ namespace AuthService.Services
             return (false, message);
         }
 
-        public override Task<RegisterResponse> Register(RegisterRequest request, ServerCallContext context)
+        public override async Task<RegisterResponse> Register(RegisterRequest request, ServerCallContext context)
         {
             try
             {
-                var user = _dbContext.Users.Where(x => x.Email == request.Email).FirstOrDefault();
+                var users = await unitOfWork.GetFilterAsync<User, UserFilter>(new UserFilter { Email = request.Email });
+                var user = users.FirstOrDefault();
+
                 if (user != null) throw new Exception("Пользователь с такой почтой уже зарегистрирован!!!");
                 if (request.Password != request.Password2) throw new Exception("Пароли не совпадают!");
 
@@ -104,14 +110,12 @@ namespace AuthService.Services
                 newUser.Salt = Guid.NewGuid().ToString();
                 newUser.Password = GetHashPassword(request.Password, newUser.Salt);
 
-                _dbContext.Add(newUser);
-                _dbContext.SaveChanges();
-
-                return Task.FromResult(new RegisterResponse { Success = true, Message = "Регистрация прошла успешно!"});
+                await unitOfWork.AddAsync(newUser);
+                return await Task.FromResult(new RegisterResponse { Success = true, Message = "Регистрация прошла успешно!" });
             }
             catch (Exception ex)
             {
-                return Task.FromResult(new RegisterResponse { Message = ex.Message, Success = false });
+                return await Task.FromResult(new RegisterResponse { Message = ex.Message, Success = false });
             }
         }
 
@@ -127,7 +131,7 @@ namespace AuthService.Services
             using (var pbkdf2 = new Rfc2898DeriveBytes(
                       password: password,
                       salt: saltBytes,
-                      iterations: Iterations,
+                      iterations: 1,
                       hashAlgorithm: HashAlgorithmName.SHA256))
             {
                 return pbkdf2.GetBytes(HashSize);
