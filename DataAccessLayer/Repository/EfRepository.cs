@@ -5,16 +5,7 @@ using System.Reflection;
 
 namespace DataAccessLayer.Repository
 {
-    public class EfRepository<TEntity, TFilter> :
-      IReadAllRepository<TEntity>,
-      IReadByIdRepository<TEntity>,
-      IReadFilterRepository<TEntity, TFilter>,
-      IAddRepository<TEntity>,
-      IUpdateRepository<TEntity>,
-      IDeleteRepository<TEntity>
-      where TEntity : class
-      where TFilter : FilterBase
-
+    public class EfRepository<TEntity, TFilter> : IRepository<TEntity, TFilter> where TEntity : class where TFilter:FilterBase
     {
         protected readonly DbContext _context;
         protected readonly DbSet<TEntity> _dbSet;

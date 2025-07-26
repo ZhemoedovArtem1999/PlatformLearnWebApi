@@ -1,5 +1,7 @@
-﻿using DataAccessLayer.Models;
+﻿using Core.RepositoryBase;
+using DataAccessLayer.Models;
 using DataAccessLayer.Repository;
+using DataAccessLayer.Repository.FilterModel;
 using DataAccessLayer.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,13 +26,15 @@ namespace DataAccessLayer.Dependency
                     services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
 
-                    services.AddScoped<IUnitOfWork>(provider =>
-                        new EfUnitOfWork(provider.GetRequiredService<AppDbContext>()));
+                    services.AddScoped<IUnitOfWork<User, UserFilter>>(provider =>
+                        new EfUnitOfWork<User, UserFilter>(provider.GetRequiredService<AppDbContext>()));
+                    services.AddScoped<IUnitOfWork<Role, FilterBase>>(provider =>
+          new EfUnitOfWork<Role, FilterBase>(provider.GetRequiredService<AppDbContext>()));
                     break;
 
                 case DataAccessType.Dapper:
-                    services.AddScoped<IUnitOfWork>(_ =>
-                        new DapperUnitOfWork(connectionString));
+                    services.AddScoped<IUnitOfWork<object, UserFilter>>(_ =>
+                        new DapperUnitOfWork<object, UserFilter>(connectionString));
                     break;
 
                 default:

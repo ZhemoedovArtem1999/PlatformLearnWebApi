@@ -1,5 +1,6 @@
 ﻿using AuthService.Infrastructure.Interfaces;
 using AuthService.Models;
+using Core.RepositoryBase;
 using DataAccessLayer.Models;
 using DataAccessLayer.Repository.FilterModel;
 using DataAccessLayer.UnitOfWork;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace AuthService.Services
 {
-    public class AuthServiceImpl(IUnitOfWork unitOfWork, ITokenManager tokenManager) : GrpcContracts.AuthService.AuthServiceBase
+    public class AuthServiceImpl(IUnitOfWork<User, UserFilter> userRepository, IUnitOfWork<Role, FilterBase> roleRepository, ITokenManager tokenManager) : GrpcContracts.AuthService.AuthServiceBase
     {
         private readonly int Iterations = 99999;
         private readonly int HashSize = 32;
@@ -69,10 +70,9 @@ namespace AuthService.Services
             string message = "Неверный логин или пароль";
             try
             {
-                var users = await unitOfWork.GetFilterAsync<User, UserFilter>(new UserFilter { Email = request.Login });
+                var users = await userRepository.GetFilterAsync(new UserFilter { Email = request.Login });
                 var user = users.FirstOrDefault();
 
-                //var user = _dbContext.Users.Where(x => x.Email == request.Login).FirstOrDefault();
                 if (user == null) throw new Exception("Неверный логин или пароль");
 
                 if (user.Password == GetHashPassword(request.Password, user.Salt))
@@ -93,7 +93,7 @@ namespace AuthService.Services
         {
             try
             {
-                var users = await unitOfWork.GetFilterAsync<User, UserFilter>(new UserFilter { Email = request.Email });
+                var users = await userRepository.GetFilterAsync(new UserFilter { Email = request.Email });
                 var user = users.FirstOrDefault();
 
                 if (user != null) throw new Exception("Пользователь с такой почтой уже зарегистрирован!!!");
@@ -110,7 +110,7 @@ namespace AuthService.Services
                 newUser.Salt = Guid.NewGuid().ToString();
                 newUser.Password = GetHashPassword(request.Password, newUser.Salt);
 
-                await unitOfWork.AddAsync(newUser);
+                await userRepository.AddAsync(newUser);
                 return await Task.FromResult(new RegisterResponse { Success = true, Message = "Регистрация прошла успешно!" });
             }
             catch (Exception ex)
@@ -137,6 +137,5 @@ namespace AuthService.Services
                 return pbkdf2.GetBytes(HashSize);
             }
         }
-
     }
 }

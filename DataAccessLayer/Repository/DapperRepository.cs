@@ -8,15 +8,7 @@ using System.Text;
 namespace DataAccessLayer.Repository
 {
 
-    public class DapperRepository<TEntity, TFilter> :
-    IReadAllRepository<TEntity>,
-    IReadByIdRepository<TEntity>,
-    IReadFilterRepository<TEntity, TFilter>,
-    IAddRepository<TEntity>,
-    IUpdateRepository<TEntity>,
-    IDeleteRepository<TEntity>
-    where TEntity : class
-    where TFilter : FilterBase
+    public class DapperRepository<TEntity, TFilter> :IRepository<TEntity, TFilter> where TEntity : class where TFilter : FilterBase
     {
         private readonly IDbConnection _connection;
         private readonly IDbTransaction _transaction;
