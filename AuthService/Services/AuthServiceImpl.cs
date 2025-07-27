@@ -101,7 +101,7 @@ namespace AuthService.Services
 
                 var newUser = new User();
                 newUser.Email = request.Email;
-                newUser.RoleId = 1; // TODO: Вернуться и исправить магическое число
+                newUser.RoleId = 3; // TODO: Вернуться и исправить магическое число
                 newUser.LastName = request.Lastname;
                 newUser.FirstName = request.Firstname;
                 newUser.MiddleName = request.Middlename;

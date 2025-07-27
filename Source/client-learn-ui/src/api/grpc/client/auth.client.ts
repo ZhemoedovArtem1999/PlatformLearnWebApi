@@ -25,14 +25,14 @@ export interface ILoginResponse {
 }
 
 export interface IRegisterRequest {
-  email: string;
-  password: string;
-  password2: string;
-  lastname: string;
-  firstname: string;
-  middlename: string;
-  date_birth: Date;
-  gender: string;
+  email?: string;
+  password?: string;
+  password2?: string;
+  lastname?: string;
+  firstname?: string;
+  middlename?: string;
+  date_birth?: Date;
+  gender?: string;
 }
 
 export interface IRegisterResponse {
@@ -44,62 +44,62 @@ export class AuthServiceService {
   private client: AuthServiceClient;
   private metadata: { [key: string]: string } = {};
 
-  
-      
-       public Login = async (request: api.LoginRequest): Promise<ILoginResponse> => {
-       try { 
-        const response = await this.LoginInternal(request);
-        return response as unknown as ILoginResponse;
+
+
+  public Login = async (request: api.LoginRequest): Promise<ILoginResponse> => {
+    try {
+      const response = await this.LoginInternal(request);
+      return response as unknown as ILoginResponse;
+    }
+    catch (error) {
+      if (error instanceof grpcWeb.RpcError) {
+        throw error;
       }
-        catch(error){
-        if (error instanceof grpcWeb.RpcError){
-          throw error;
-        }
-          else{
-            throw error;
-            }
-        }
-    
+      else {
+        throw error;
+      }
+    }
+
   };
 
   private LoginInternal = (request: api.LoginRequest): Promise<api.LoginResponse> => {
     return this.callMethod('login', request);
   };
-      
-       public Register = async (request: api.RegisterRequest): Promise<IRegisterResponse> => {
-       try { 
-        const response = await this.RegisterInternal(request);
-        return response as unknown as IRegisterResponse;
+
+  public Register = async (request: api.RegisterRequest): Promise<IRegisterResponse> => {
+    try {
+      const response = await this.RegisterInternal(request);
+      return response as unknown as IRegisterResponse;
+    }
+    catch (error) {
+      if (error instanceof grpcWeb.RpcError) {
+        throw error;
       }
-        catch(error){
-        if (error instanceof grpcWeb.RpcError){
-          throw error;
-        }
-          else{
-            throw error;
-            }
-        }
-    
+      else {
+        throw error;
+      }
+    }
+
   };
 
   private RegisterInternal = (request: api.RegisterRequest): Promise<api.RegisterResponse> => {
     return this.callMethod('register', request);
   };
-      
-       public TokenValid = async (request: api.TokenValidRequest): Promise<ITokenValidResponse> => {
-       try { 
-        const response = await this.TokenValidInternal(request);
-        return response as unknown as ITokenValidResponse;
+
+  public TokenValid = async (request: api.TokenValidRequest): Promise<ITokenValidResponse> => {
+    try {
+      const response = await this.TokenValidInternal(request);
+      return response as unknown as ITokenValidResponse;
+    }
+    catch (error) {
+      if (error instanceof grpcWeb.RpcError) {
+        throw error;
       }
-        catch(error){
-        if (error instanceof grpcWeb.RpcError){
-          throw error;
-        }
-          else{
-            throw error;
-            }
-        }
-    
+      else {
+        throw error;
+      }
+    }
+
   };
 
   private TokenValidInternal = (request: api.TokenValidRequest): Promise<api.TokenValidResponse> => {

@@ -285,7 +285,7 @@ function generateMessageInterfaces(protoContent: string): string {
 
         const type = convertProtoTypeToTs(fieldMatch[1]);
         const name = fieldMatch[2];
-        return `  ${name}: ${type};`;
+        return `  ${name}?: ${type};`;
       })
       .filter(Boolean)
       .join("\n");

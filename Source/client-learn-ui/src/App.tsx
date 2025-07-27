@@ -15,10 +15,9 @@ import authStore from "./stores/auth-store";
 import { AuthServiceClientApi } from "../src/api/grpc/client/auth.client";
 import { TokenValidRequest } from "./api/grpc/api/auth/auth_pb";
 import * as grpcWeb from 'grpc-web';
+import { Register } from "./components/pages/Auth/Register";
 
 addLocale("ru", ruLocale["ru"]);
-
-
 
 const App: React.FC = observer(() => {
   const locale = {
@@ -54,6 +53,7 @@ const App: React.FC = observer(() => {
             <Routes>
               <Route path="/" element={<></>} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
           </Router>
         </PlatformLearnApi>

@@ -19,8 +19,8 @@ export const Auth: React.FC = () => {
 
   const handleRegistration = () => {
     console.log("Проверка");
-    testApi?.login();
-    // window.location.href = '/';
+    // testApi?.login();
+     window.location.href = '/register';
   };
 
   const handleLogin = async () => {
